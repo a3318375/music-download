@@ -1,4 +1,4 @@
-FROM openjdk:21-jdk-slim
+FROM swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/library/openjdk:21-slim
 
 # 设置非交互式安装（避免 tzdata 提示）
 ENV DEBIAN_FRONTEND=noninteractive

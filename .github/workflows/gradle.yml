@@ -29,7 +29,7 @@ jobs:
       - uses: mr-smithers-excellent/docker-build-push@v5
         name: 编译docker镜像
         with:
-          image: inyaa/inyaw
+          image: a3318375/music-download
           tags: latest
           registry: docker.io
           dockerfile: Dockerfile

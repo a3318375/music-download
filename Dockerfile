@@ -12,24 +12,26 @@ RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         python3.10 \
         python3-pip \
-	openjdk-21-jdk \
+	    openjdk-21-jdk \
         git \
     && rm -rf /var/lib/apt/lists/*
 
 # 创建应用目录（/home/app）
 RUN mkdir -p /home/app
 
+# 设置 pip 国内源
+RUN pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+
 # 设置工作目录
 WORKDIR /home/app
 
-RUN CD /home/app
+# 克隆 musicdl 并安装（在同一个 RUN 中完成，避免目录问题）
+RUN git clone https://github.com/CharlesPikachu/musicdl.git && \
+    cd musicdl && \
+    pip install .
 
-RUN git clone https://kkgithub.com/CharlesPikachu/musicdl
-RUN cd musicdl
-RUN pip install . -i https://pypi.tuna.tsinghua.edu.cn/simple
-RUN ..
-#将本地项目jar包拷贝到Docker容器中的位置
-ADD build/libs/music-download-1.0.jar /home/app
+# 拷贝本地 JAR 文件（确保宿主机 build/libs/ 下有该文件）
+COPY build/libs/music-download-1.0.jar /home/app/
 
 EXPOSE 8080
 #开机启动

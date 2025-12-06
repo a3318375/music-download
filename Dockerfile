@@ -32,6 +32,8 @@ RUN git clone https://github.com/CharlesPikachu/musicdl.git && \
 
 # 拷贝本地 JAR 文件（确保宿主机 build/libs/ 下有该文件）
 COPY build/libs/music-download-1.0.jar /home/app/
+COPY read_pkl.py /home/app/
+COPY search_music.py /home/app/
 
 EXPOSE 8080
 #开机启动

@@ -35,4 +35,4 @@ COPY build/libs/music-download-1.0.jar /home/app/
 
 EXPOSE 8080
 #开机启动
-ENTRYPOINT ["java","-jar","/music-download-1.0.jar"]
+ENTRYPOINT ["java","-jar","/home/app/music-download-1.0.jar"]

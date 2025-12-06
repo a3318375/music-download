@@ -26,7 +26,7 @@ public class SearchService {
         List<SongInfo> list = new ArrayList<>();
         try {
             // 构建命令：假设 python3 在 PATH 中
-            ProcessBuilder pb = new ProcessBuilder("python", "/home/app/search_music.py", name);
+            ProcessBuilder pb = new ProcessBuilder("python3", "/home/app/search_music.py", name);
             pb.redirectErrorStream(true); // 合并 stderr 到 stdout
 
             Process process = pb.start();
@@ -71,7 +71,7 @@ public class SearchService {
     private static String callPythonScript(String pklPath) {
         try {
             ProcessBuilder pb = new ProcessBuilder(
-                    "python",
+                    "python3",
                     "/home/app/read_pkl.py",
                     pklPath
             );

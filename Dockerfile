@@ -1,32 +1,35 @@
-FROM swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/library/openjdk:21-slim
+FROM ubuntu:22.04
 
-# 设置非交互式安装（避免 tzdata 提示）
+# 设置非交互模式（避免 tzdata 等弹窗）
 ENV DEBIAN_FRONTEND=noninteractive
 
-# 安装 Python 3.10、pip、git 及其他必要工具
+# 替换为阿里云 Ubuntu 镜像源（加速下载）
+RUN sed -i 's|http://[a-z0-9\.]*\.archive\.ubuntu\.com|https://mirrors.aliyun.com|g' /etc/apt/sources.list && \
+    sed -i 's|http://security\.ubuntu\.com|https://mirrors.aliyun.com|g' /etc/apt/sources.list
+
+# 安装 Python 和 git
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
         python3.10 \
-        python3.10-venv \
         python3-pip \
+	openjdk-21-jdk \
         git \
-        curl \
-        && \
-    # 创建软链接，使 python3 和 pip3 可用
-    ln -sf /usr/bin/python3.10 /usr/bin/python3 && \
-    ln -sf /usr/bin/pip3 /usr/bin/pip && \
-    # 升级 pip
-    #pip install --upgrade pip && \
-    # 克隆并安装 musicdl
-    git clone https://github.com/CharlesPikachu/musicdl.git /tmp/musicdl && \
-    cd /tmp/musicdl && \
-    pip install . && \
-    # 清理缓存和临时文件以减小镜像体积
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/musicdl
+    && rm -rf /var/lib/apt/lists/*
 
+# 创建应用目录（/home/app）
+RUN mkdir -p /home/app
+
+# 设置工作目录
+WORKDIR /home/app
+
+RUN CD /home/app
+
+RUN git clone https://kkgithub.com/CharlesPikachu/musicdl
+RUN cd musicdl
+RUN pip install . -i https://pypi.tuna.tsinghua.edu.cn/simple
+RUN ..
 #将本地项目jar包拷贝到Docker容器中的位置
-ADD build/libs/music-download-1.0.jar ./
+ADD build/libs/music-download-1.0.jar /home/app
 
 EXPOSE 8080
 #开机启动
